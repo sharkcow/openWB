@@ -211,13 +211,16 @@ def savelastrfidtag():
         Values.update({'rfidlasttag' : readtag})
 
 def clearoldrfidtag():
-    t = os.path.getmtime('ramdisk/readtag')
-    timediff = time.time() - t
-    if timediff > 300:
-        logDebug(1, str("Verwerfe Tag nach ") + str(timediff) + str(" Sekunden"))
-        f = open('ramdisk/readtag', 'w')
-        f.write(str("0"))
-        f.close()
+    with open('ramdisk/readtag', 'r') as readtagfile:
+        readtag = str( readtagfile.read().rstrip() )
+    if (readtag != "0"):
+        t = os.path.getmtime('ramdisk/readtag')
+        timediff = time.time() - t
+        if timediff > 300:
+            logDebug(1, str("Verwerfe Tag nach ") + str(timediff) + str(" Sekunden"))
+            f = open('ramdisk/readtag', 'w')
+            f.write(str("0"))
+            f.close()
 
 readrfidlist()
 
